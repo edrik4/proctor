@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #111921;
+            padding: 20px;
+            
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            text-decoration: underline;
+            font-size: 18px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: hsl(0, 15%, 21%);
+            border-radius: 5px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .content h1 {
+            color: #000000;
+            text-align:center;
+        }
+        .info-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* Space between image and details */
+            margin-top: 20px;
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Image Section - Now aligned to the left */
+        .image-section {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Student Info Section */
+        .student-info {
+            width: 50%;
+            margin: 20px auto;
+            text-align: left;
+            padding:30px;
+            border-radius: 8px;
+            background: #f1f1f1;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-left: 0;
+        }
+
+        .student-info p {
+            font-size: 18px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Student Dashboard</h2>
+        <a href="#">Ongoing Exams</a>
+        <a href="#">Scheduled Exams</a>
+        <a href="#">View Score</a>
+    </div>
+
+    <div class="content">
+        <h1>Student Profile</h1>
+        <div class="image-section">
+            <img src="aadi.jpg" alt="Student Image">
+        </div>
+        
+        <div class="student-info">
+            <p><strong>Name:</strong> Aadityh K Anand</p>
+            <p><strong>Department:</strong> Computer Science Engg</p>
+            <p><strong>Roll No.:</strong> AIK22CS002</p>
+        </div>
+        
+    </div>
+
+</body>
+</html>
