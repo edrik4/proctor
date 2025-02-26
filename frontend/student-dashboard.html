@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, <span id="student-name"></span> (Student)</h1>
+
+        <!-- Profile Section -->
+        <div class="profile">
+            <h2>Profile</h2>
+            <p><strong>Name:</strong> <span id="profile-name"></span></p>
+            <p><strong>Username:</strong> <span id="profile-username"></span></p>
+        </div>
+
+        <!-- Exams Section -->
+        <div class="exams">
+            <a href="exam-start.html"><button>Exams</button></a>
+            <ul id="exam-list"></ul>
+        </div>
+
+        <a href="/logout">Logout</a>
+    </div>
+
+    <script>
+        const username = localStorage.getItem("username");
+
+        // Fetch student details
+        async function fetchStudentProfile() {
+            try {
+                const response = await fetch(`http://localhost:3000/student/${username}`);
+                const data = await response.json();
+                document.getElementById("student-name").innerText = data.name;
+                document.getElementById("profile-name").innerText = data.name;
+                document.getElementById("profile-username").innerText = data.username;
+            } catch (error) {
+                console.error("Error fetching student details:", error);
+            }
+        }
+
+        // Fetch exams
+        async function fetchExams() {
+            try {
+                const response = await fetch("http://localhost:3000/exams");
+                const exams = await response.json();
+                const examList = document.getElementById("exam-list");
+
+                exams.forEach(exam => {
+                    const li = document.createElement("li");
+                    li.textContent = `${exam.subject} - ${exam.date} at ${exam.time}`;
+                    examList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Error fetching exams:", error);
+            }
+        }
+
+        fetchStudentProfile();
+        fetchExams();
+    </script>
+</body>
+</html>

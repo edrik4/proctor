@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, <span id="username"></span> (Teacher)</h1>
+        <p>Username: <span id="userdetails"></span></p>
+        <a href="/logout">Logout</a>
+    </div>
+    <script>
+        document.getElementById("username").innerText = localStorage.getItem("username");
+        document.getElementById("userdetails").innerText = localStorage.getItem("username");
+    </script>
+</body>
+</html>

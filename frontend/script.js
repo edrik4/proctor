@@ -1,36 +1,80 @@
-function redirectToLogin(role) {
-    localStorage.setItem("role", role);
-    window.location.href = "login.html";
-}
-
 async function login() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    const role = localStorage.getItem("role");
 
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-    });
+    try {
+        const response = await fetch("http://localhost:3000/login", {  // Port must match backend
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
 
-    const data = await res.json();
-    if (res.ok) window.location.href = data.redirect;
-    else alert(data.msg);
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Login successful!");
+            if (data.role === "admin") {
+                window.location.href = "admin-panel.html";
+            } else if (data.role === "teacher") {
+                window.location.href = "teacher-dashboard.html";
+            } else if (data.role === "student") {
+                window.location.href = "student-dashboard.html";
+            }
+        } else {
+            alert(data.message || "Invalid credentials");
+        }
+    } catch (error) {
+        alert("Error connecting to the server.");
+        console.error("Login Error:", error);
+    }
 }
 
-async function registerUser() {
-    const name = document.getElementById("name").value;
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+function redirectToLogin(role) {
+    window.location.href = `login.html?role=${role}`;
+}
+async function addUser() {
+    const name = document.getElementById("name").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
     const role = document.getElementById("role").value;
+    const message = document.getElementById("message");
 
-    const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, username, password, role })
-    });
+    // Simple validation
+    if (!name || !username || !password) {
+        message.innerText = "All fields are required!";
+        message.style.color = "red";
+        return;
+    }
 
-    const data = await res.json();
-    alert(data.msg);
+    try {
+        const response = await fetch("http://localhost:3000/admin/addUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, username, password, role })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            message.innerText = "User added successfully!";
+            message.style.color = "green";
+
+            // Clear input fields
+            document.getElementById("name").value = "";
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+        } else {
+            message.innerText = data.message || "Error adding user.";
+            message.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        message.innerText = "Server error. Please try again.";
+        message.style.color = "red";
+    }
 }
+

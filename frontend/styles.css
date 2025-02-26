@@ -1,7 +1,7 @@
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #313133;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,14 +11,13 @@ body {
 
 /* Centered Container */
 .container {
-    background: white;
+    background:  rgb(236, 227, 227);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     width: 350px;
 }
-
 /* Heading */
 h2 {
     margin-bottom: 20px;
@@ -48,7 +47,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #4e45a0;
 }
 
 /* Button Container for Index Page */

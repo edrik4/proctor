@@ -44,8 +44,9 @@ app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (!user) return res.status(400).json({ message: "User not found" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log(user.password);
+    //const isMatch = await bcrypt.compare(password, user.password);*/
+    const isMatch = (password == user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     res.json({ message: "Login successful", role: user.role, name: user.name });
@@ -54,10 +55,23 @@ app.post("/login", async (req, res) => {
 // Add User Route (Admin Only)
 app.post("/addUser", async (req, res) => {
     const { name, username, password, role } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, username, password: hashedPassword, role });
+    /*const hashedPassword = await bcrypt.hash(password, 10);*/
+    const newUser = new User({ name, username, password, role });
     await newUser.save();
     res.json({ message: "User added successfully" });
+});
+
+// Fetch student details
+app.get("/student/:username", async (req, res) => {
+    const { username } = req.params;
+    try {
+        const student = await User.findOne({ username, role: "student" });
+        if (!student) return res.status(404).json({ message: "Student not found" });
+
+        res.json({ name: student.name, username: student.username });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
 });
 
 // Start Server
