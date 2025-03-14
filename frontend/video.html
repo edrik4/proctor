@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proctored MCQ Exam</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .video-container, .quiz-container {
+            margin: 10px;
+        }
+        video {
+            border-radius: 10px;
+            border: 2px solid #007bff;
+            width: 320px;
+            height: 240px;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #alertBox {
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="video-container">
+            <h2>Webcam Feed</h2>
+            <video id="webcam" autoplay></video>
+            <div id="alertBox"></div> <!-- Alerts for unauthorized objects -->
+        </div>
+        <div class="quiz-container">
+            <h2>MCQ Exam</h2>
+            <form id="quiz-form">
+                <div class="question">
+                    <p>1. What is the capital of France?</p>
+                    <input type="radio" name="q1" value="Paris"> Paris<br>
+                    <input type="radio" name="q1" value="London"> London<br>
+                    <input type="radio" name="q1" value="Rome"> Rome<br>
+                </div>
+                <div class="question">
+                    <p>2. What is 2 + 2?</p>
+                    <input type="radio" name="q2" value="3"> 3<br>
+                    <input type="radio" name="q2" value="4"> 4<br>
+                    <input type="radio" name="q2" value="5"> 5<br>
+                </div>
+                <div class="question">
+                    <p>3. Who wrote 'Hamlet'?</p>
+                    <input type="radio" name="q3" value="Shakespeare"> Shakespeare<br>
+                    <input type="radio" name="q3" value="Hemingway"> Hemingway<br>
+                    <input type="radio" name="q3" value="Austen"> Austen<br>
+                </div>
+                <button type="button" id="submitExam">Submit Exam</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let video = document.getElementById("webcam");
+        let alertBox = document.getElementById("alertBox");
+
+        async function openWebcam() {
+            try {
+                let stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                startMonitoring(); // Start monitoring with YOLOv8
+            } catch (error) {
+                console.error("Error accessing webcam:", error);
+                alert("Could not access webcam.");
+            }
+        }
+
+        function captureFrame() {
+            let canvas = document.createElement("canvas");
+            let context = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            return canvas.toDataURL("image/jpeg");
+        }
+
+        async function sendFrame() {
+            let imageData = captureFrame();
+            let blob = await fetch(imageData).then(res => res.blob());
+            let formData = new FormData();
+            formData.append("image", blob, "frame.jpg");
+
+            try {
+                let response = await fetch("http://127.0.0.1:5000/detect", {
+                    method: "POST",
+                    body: formData
+                });
+                let data = await response.json();
+
+                if (data.alerts.length > 0) {
+                    alertBox.innerHTML = "⚠️ " + data.alerts.join("<br>");
+                } else {
+                    alertBox.innerHTML = "";
+                }
+
+            } catch (error) {
+                console.error("Error sending frame:", error);
+            }
+        }
+
+        function startMonitoring() {
+            setInterval(sendFrame, 5000); // Send image every 5 seconds
+        }
+
+        function submitExam() {
+            const answers = {
+                q1: "Paris",
+                q2: "4",
+                q3: "Shakespeare"
+            };
+            let score = 0;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) {
+                    score++;
+                }
+            }
+            alert(`Exam submitted! Your score: ${score}/3`);
+            stopWebcam();
+        }
+
+        function stopWebcam() {
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        document.getElementById("submitExam").addEventListener("click", submitExam);
+        openWebcam();
+    </script>
+</body>
+</html>

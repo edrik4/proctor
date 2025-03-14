@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Exam</title>
+    <link rel="stylesheet" href="exam_creation.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <h3>Create Exam</h3>
+    <label>Time Limit (Minutes): </label>
+    <input type="number" id="examTime" min="1" placeholder="Enter time limit">
+
+    <div id="questionForm">
+        <label>Question Number:</label>
+        <input type="number" id="questionNumber" min="1">
+
+        <label>Question:</label>
+        <textarea id="questionText"></textarea>
+
+        <label>Options:</label>
+        <input type="text" class="option" placeholder="Option 1">
+        <input type="text" class="option" placeholder="Option 2">
+        <input type="text" class="option" placeholder="Option 3">
+        <input type="text" class="option" placeholder="Option 4">
+
+        <label>Correct Answer:</label>
+        <select id="correctAnswer">
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+            <option value="4">Option 4</option>
+        </select>
+
+        <button onclick="addQuestion()">Create Next Question</button>
+    </div>
+
+    <h3>Questions List</h3>
+    <ul id="questionList"></ul>
+
+    <button onclick="submitExam()">Submit Exam</button>
+</body>
+</html>

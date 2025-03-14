@@ -77,4 +77,40 @@ async function addUser() {
         message.style.color = "red";
     }
 }
+function addQuestion() {
+    // Get input values
+    let questionNumber = document.getElementById("questionNumber").value;
+    let questionText = document.getElementById("questionText").value;
+    let options = document.querySelectorAll(".option");
+    let correctAnswer = document.getElementById("correctAnswer").value;
 
+    // Check if all fields are filled
+    if (!questionNumber || !questionText || [...options].some(opt => opt.value === "")) {
+        alert("Please fill in all fields before adding a new question.");
+        return;
+    }
+
+    // Prepare question data
+    let questionData = {
+        number: questionNumber,
+        text: questionText,
+        options: [...options].map(opt => opt.value),
+        correct: correctAnswer
+    };
+
+    // Display in Questions List
+    let questionList = document.getElementById("questionList");
+    let listItem = document.createElement("li");
+    listItem.textContent = `Q${questionData.number}: ${questionData.text}`;
+    questionList.appendChild(listItem);
+
+    // Clear fields except Time Limit
+    document.getElementById("questionNumber").value = "";
+    document.getElementById("questionText").value = "";
+    options.forEach(opt => opt.value = "");
+    document.getElementById("correctAnswer").selectedIndex = 0;
+}
+
+function submitExam() {
+    alert("Exam submitted successfully!");
+}

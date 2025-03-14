@@ -49,9 +49,22 @@
             </li>
         </ol>
         <br>
-        <input type="checkbox">I read and understand the above Instructions.
+        <input type="checkbox" id="agree" onclick="ButtonandText()"> 
+        <label for="agree" id="agreeLabel">I read and understand the above Instructions.</label>
         <br>
-        <button>start exam</button>
-
+        <a href="video.html">
+        <button id="startButton" disabled>Start Exam</button>
+        </a>
+        
+        <script>
+          function ButtonandText() {
+            const checkbox = document.getElementById('agree');
+            const startButton = document.getElementById('startButton');
+            const label = document.getElementById('agreeLabel');
+            startButton.disabled = !checkbox.checked;
+            label.style.color = checkbox.checked ? '' : 'red';
+          }
+        </script>
+        
 </body>
 </html>
